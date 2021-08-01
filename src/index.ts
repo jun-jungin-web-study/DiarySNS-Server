@@ -1,7 +1,6 @@
 import App from "./app";
+import logger from "./middleware/logger";
 
-const app = new App().application;
+const app = new App(logger);
 
-app.listen(3000, () => {
-  console.log("Server listening on port 3000");
-});
+app.run();
