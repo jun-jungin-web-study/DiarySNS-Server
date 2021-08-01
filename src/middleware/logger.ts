@@ -1,4 +1,5 @@
 import { Logger, createLogger, transports, format } from "winston";
+import { ServerStatus } from "../types/types";
 
 interface TransformableInfo {
   level: string;
@@ -15,12 +16,12 @@ const consoleTransport = new transports.Console({
     format.colorize(),
     format.printf(
       (info: TransformableInfo) =>
-        `${info.timestamp} - $ ${info.level}: ${info.level} ${info.message}`
+        `${info.timestamp} - $ ${info.level}: ${info.message}`
     )
   )
 });
 
-const fileTransport = new transports.File({
+const devTransport = new transports.File({
   filename: "./server.log",
   format: format.combine(
     format.label({ label: "[DiarySNS Test Server]" }),
@@ -29,13 +30,46 @@ const fileTransport = new transports.File({
     }),
     format.printf(
       (info: TransformableInfo) =>
-        `${info.timestamp} - $ ${info.level}: ${info.level} ${info.message}`
+        `${info.timestamp} - $ ${info.level}: ${info.message}`
     )
   )
 });
 
-const logger: Logger = createLogger({
-  transports: [fileTransport, consoleTransport]
+const testTransport = new transports.File({
+  filename: "./test.log",
+  format: format.combine(
+    format.label({ label: "[DiarySNS Test Server]" }),
+    format.timestamp({
+      format: "YYYY-MM-DD HH:mm:ss"
+    }),
+    format.printf(
+      (info: TransformableInfo) =>
+        `${info.timestamp} - $ ${info.level}: ${info.message}`
+    )
+  )
 });
+
+interface LogOption {
+  status: ServerStatus;
+}
+
+const logger = (logOption: LogOption) => {
+  switch (logOption.status) {
+    case ServerStatus.DEV: {
+      return createLogger({
+        transports: [devTransport, consoleTransport]
+      });
+    }
+    case ServerStatus.TEST: {
+      return createLogger({
+        transports: [testTransport]
+      });
+    }
+    default:
+      throw new Error(
+        `Logger is initialized with strange Option: ${logOption}`
+      );
+  }
+};
 
 export default logger;
