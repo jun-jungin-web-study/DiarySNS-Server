@@ -1,5 +1,4 @@
 import { Router } from "express";
-import App from "../../../app";
 
 const LoginRouter = Router();
 
