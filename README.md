@@ -1,2 +1,2 @@
 # DiarySNS-Server
-Server of DiarySNS
+Server of DiarySNS!
