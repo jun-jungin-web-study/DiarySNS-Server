@@ -1,6 +1,7 @@
 import express from "express";
 import { Logger } from "winston";
 import logger from "./middleware/logger";
+import baseRouter from "./routes/routes";
 import { ServerOptions } from "./types/types";
 
 class App {
@@ -8,15 +9,17 @@ class App {
   public logger?: Logger;
 
   constructor(serverOptions: ServerOptions) {
-    this.app = express();
+    const app = express();
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json());
+
+    this.app = app;
     this.router();
     this.logger = logger({ status: serverOptions.status });
   }
 
   private router(): void {
-    this.app.get("/", (req: express.Request, res: express.Response) => {
-      res.status(200).json({ body: "Hello" });
-    });
+    this.app.use("/", baseRouter);
   }
 }
 

@@ -22,7 +22,8 @@ const consoleTransport = new transports.Console({
 });
 
 const devTransport = new transports.File({
-  filename: "./server.log",
+  filename: "./log/server.log",
+  level: "debug",
   format: format.combine(
     format.label({ label: "[DiarySNS Test Server]" }),
     format.timestamp({
@@ -36,7 +37,8 @@ const devTransport = new transports.File({
 });
 
 const testTransport = new transports.File({
-  filename: "./test.log",
+  filename: "./log/test.log",
+  level: "debug",
   format: format.combine(
     format.label({ label: "[DiarySNS Test Server]" }),
     format.timestamp({

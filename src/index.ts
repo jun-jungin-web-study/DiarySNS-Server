@@ -1,5 +1,5 @@
 import App from "./app";
-import logger from "./middleware/logger";
+import { ServerStatus } from "./types/types";
 
 const app = new App({ status: ServerStatus.DEV });
 
