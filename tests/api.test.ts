@@ -28,26 +28,26 @@ describe("Test base url", () => {
     connection.close();
   });
 
-  it.only("GET '/'", async () => {
+  it("GET '/'", async () => {
     const response = await request(app).get("/");
 
     expect(response.statusCode).toBe(200);
   });
 
-  // it("GET /api/login", async () => {
-  //   const response = await request(app.app).get("/api/login");
+  it("GET /api/login", async () => {
+    const response = await request(app).get("/api/login");
 
-  //   expect(response.statusCode).toBe(200);
-  // });
+    expect(response.statusCode).toBe(200);
+  });
 
-  // it("POST /api/login", async () => {
-  //   const login = {
-  //     id: "abcd",
-  //     pw: "12341234"
-  //   };
+  it("POST /api/login", async () => {
+    const login = {
+      id: "abcd",
+      pw: "12341234"
+    };
 
-  //   const response = await request(app.app).post("/api/login").send(login);
+    const response = await request(app).post("/api/login").send(login);
 
-  //   expect(response.statusCode).toBe(200);
-  // });
+    expect(response.statusCode).toBe(200);
+  });
 });
