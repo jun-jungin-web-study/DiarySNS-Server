@@ -1,5 +1,25 @@
 import { Logger, createLogger, transports, format } from "winston";
-import { ServerStatus } from "../types/types";
+
+const testTransport = new transports.File({
+  filename: "./log/test.log",
+  level: "debug",
+  format: format.combine(
+    format.label({ label: "[DiarySNS Test Server]" }),
+    format.timestamp({
+      format: "YYYY-MM-DD HH:mm:ss"
+    }),
+    format.printf(
+      (info: TransformableInfo) =>
+        `${info.timestamp} - $ ${info.level}: ${info.message}`
+    )
+  )
+});
+
+enum LOG_OPTION {
+  TEST,
+  DEV,
+  PRODUCTION
+}
 
 interface TransformableInfo {
   level: string;
@@ -21,9 +41,9 @@ const consoleTransport = new transports.Console({
   )
 });
 
-const devTransport = new transports.File({
+const productionTransport = new transports.File({
   filename: "./log/server.log",
-  level: "debug",
+  level: "info",
   format: format.combine(
     format.label({ label: "[DiarySNS Test Server]" }),
     format.timestamp({
@@ -36,42 +56,8 @@ const devTransport = new transports.File({
   )
 });
 
-const testTransport = new transports.File({
-  filename: "./log/test.log",
-  level: "debug",
-  format: format.combine(
-    format.label({ label: "[DiarySNS Test Server]" }),
-    format.timestamp({
-      format: "YYYY-MM-DD HH:mm:ss"
-    }),
-    format.printf(
-      (info: TransformableInfo) =>
-        `${info.timestamp} - $ ${info.level}: ${info.message}`
-    )
-  )
+const logger: Logger = createLogger({
+  transports: [consoleTransport, productionTransport]
 });
-
-interface LogOption {
-  status: ServerStatus;
-}
-
-const logger = (logOption: LogOption) => {
-  switch (logOption.status) {
-    case ServerStatus.DEV: {
-      return createLogger({
-        transports: [devTransport, consoleTransport]
-      });
-    }
-    case ServerStatus.TEST: {
-      return createLogger({
-        transports: [testTransport]
-      });
-    }
-    default:
-      throw new Error(
-        `Logger is initialized with strange Option: ${logOption}`
-      );
-  }
-};
 
 export default logger;

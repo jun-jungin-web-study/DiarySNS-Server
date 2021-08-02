@@ -11,6 +11,7 @@ export const DB_CONFIG = {
   TESTDB_NAME: process.env.TESTDB_NAME
 };
 
-export const SERVER_CONFIG = {
-  SERVER_PORT: process.env.SERVER_PORT ?? 3000
-};
+export enum DB {
+  TEST,
+  DEV
+}
