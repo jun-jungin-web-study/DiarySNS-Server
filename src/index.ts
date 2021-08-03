@@ -2,9 +2,8 @@ import { createConnection } from "typeorm";
 import express from "express";
 import logger from "./middleware/logger";
 
-import { SERVER_CONFIG } from "./config/serverconfig";
-import { connectionOptions } from "./config/ormconfig";
-import { DB } from "./config/dbcconfig";
+import { ENV_CONFIG } from "./config/envconfig";
+import { SERVER_CONFIG, SERVE_MODE } from "./config/serverconfig";
 
 import App from "./app";
 
@@ -21,10 +20,9 @@ import UserController from "./controller/User/UserController";
 import PostController from "./controller/Post/PostController";
 import CommentController from "./controller/Comment/CommentController";
 import TagController from "./controller/Tag/TagController";
+import dbConnection from "./db/db";
 
-const PORT = SERVER_CONFIG.SERVER_PORT;
-
-const serve = async (): Promise<void> => {
+export const bootstrap = async () => {
   const middlewares: any[] = [
     express.urlencoded({ extended: true }),
     express.json()
@@ -45,9 +43,18 @@ const serve = async (): Promise<void> => {
     new TagController(tagService, authService)
   ];
 
-  const connection = await createConnection(connectionOptions(DB.DEV));
-  const app = new App(connection, controllers, middlewares);
-  app.app.listen(PORT, () => logger?.info(`Server start on ${PORT}`));
+  return new App(controllers, middlewares);
 };
 
-serve();
+dbConnection
+  .then(connection => {
+    logger.info(
+      `DB: ${ENV_CONFIG.MAINDB_NAME} connected on ${ENV_CONFIG.DB_HOST}:${ENV_CONFIG.DB_PORT}`
+    );
+    return bootstrap();
+  })
+  .then(app => {
+    if (process.env.NODE_ENV !== "test") {
+      app.listen(ENV_CONFIG.PORT);
+    }
+  });
