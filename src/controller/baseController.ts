@@ -7,10 +7,14 @@ abstract class baseController {
 
   // express router
   abstract router: Router;
+
+  // services
   abstract service: any;
+
+  //always have authservice
   authService?: AuthService;
 
-  //register functions requests at router
+  //register get, post, put, etc at router
   abstract init(): void;
 }
 

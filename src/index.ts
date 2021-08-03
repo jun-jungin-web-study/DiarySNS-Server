@@ -1,9 +1,7 @@
-import { createConnection } from "typeorm";
 import express from "express";
 import logger from "./middleware/logger";
 
 import { ENV_CONFIG } from "./config/envconfig";
-import { SERVER_CONFIG, SERVE_MODE } from "./config/serverconfig";
 
 import App from "./app";
 
@@ -46,15 +44,15 @@ export const bootstrap = async () => {
   return new App(controllers, middlewares);
 };
 
-dbConnection
-  .then(connection => {
-    logger.info(
-      `DB: ${ENV_CONFIG.MAINDB_NAME} connected on ${ENV_CONFIG.DB_HOST}:${ENV_CONFIG.DB_PORT}`
-    );
-    return bootstrap();
-  })
-  .then(app => {
-    if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV !== "test") {
+  dbConnection
+    .then(connection => {
+      logger.info(
+        `DB: ${ENV_CONFIG.MAINDB_NAME} connected on ${ENV_CONFIG.DB_HOST}:${ENV_CONFIG.DB_PORT}`
+      );
+      return bootstrap();
+    })
+    .then(app => {
       app.listen(ENV_CONFIG.PORT);
-    }
-  });
+    });
+}

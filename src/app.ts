@@ -1,6 +1,5 @@
 import express from "express";
 import { Server } from "http";
-import { Connection } from "typeorm";
 import baseController from "./controller/baseController";
 import logger from "./middleware/logger";
 

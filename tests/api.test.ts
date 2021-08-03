@@ -1,5 +1,4 @@
 import request from "supertest";
-import { SERVER_CONFIG, SERVE_MODE } from "../src/config/serverconfig";
 import { bootstrap } from "../src";
 import { ENV_CONFIG } from "../src/config/envconfig";
 import App from "../src/app";
