@@ -1,10 +1,4 @@
-import {
-  BaseEntity,
-  Entity,
-  PrimaryColumn,
-  CreateDateColumn,
-  Column
-} from "typeorm";
+import { Entity, PrimaryColumn, Column } from "typeorm";
 import { Common } from "./Common";
 
 @Entity()
