@@ -5,17 +5,15 @@ import {
   CreateDateColumn,
   Column
 } from "typeorm";
+import { Common } from "./Common";
 
 @Entity()
-class Tag extends BaseEntity {
+class Tag extends Common {
   @PrimaryColumn("uuid")
   id: number;
 
   @Column({ type: "varchar", length: 255 })
   description: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
 }
 
 export default Tag;

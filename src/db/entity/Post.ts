@@ -9,6 +9,7 @@ import {
   OneToMany,
   ManyToMany
 } from "typeorm";
+import { Common } from "./Common";
 import Image from "./Image";
 import Tag from "./Tag";
 import User from "./User";
@@ -18,10 +19,7 @@ enum BackgroundPaper {
 }
 
 @Entity()
-class Post extends BaseEntity {
-  @PrimaryColumn()
-  id: number;
-
+class Post extends Common {
   @Column({ type: "text" })
   title: string;
 
@@ -45,12 +43,6 @@ class Post extends BaseEntity {
 
   @ManyToMany(type => Tag)
   tags: Tag[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }
 
 export default Post;

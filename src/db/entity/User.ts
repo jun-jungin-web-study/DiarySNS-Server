@@ -6,13 +6,11 @@ import {
   CreateDateColumn,
   OneToOne
 } from "typeorm";
+import { Common } from "./Common";
 import Image from "./Image";
 
 @Entity()
-class User extends BaseEntity {
-  @PrimaryColumn()
-  id: number;
-
+class User extends Common {
   @Column({ unique: true })
   email: string;
 
@@ -27,9 +25,6 @@ class User extends BaseEntity {
 
   @OneToOne(type => Image)
   profileImage: Image;
-
-  @CreateDateColumn()
-  createdAt: Date;
 }
 
 export default User;
