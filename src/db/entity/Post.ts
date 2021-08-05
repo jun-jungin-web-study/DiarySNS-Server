@@ -4,24 +4,29 @@ import {
   Entity,
   PrimaryColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  ManyToOne,
+  OneToMany,
+  ManyToMany
 } from "typeorm";
+import Image from "./Image";
+import Tag from "./Tag";
+import User from "./User";
 
-type BackgroundPaper = "normal";
+enum BackgroundPaper {
+  BASIC = "basic"
+}
 
 @Entity()
 class Post extends BaseEntity {
   @PrimaryColumn()
   id: number;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
   @Column({ type: "text" })
   title: string;
+
+  @ManyToOne(type => User)
+  author: User;
 
   @Column({ type: "longtext" })
   body: string;
@@ -29,14 +34,23 @@ class Post extends BaseEntity {
   @Column({ type: "boolean" })
   isPublic: boolean;
 
-  @Column()
+  @Column({ type: "varchar", length: 100 })
   font: string;
 
-  @Column()
+  @Column({ type: "enum", enum: BackgroundPaper })
   backgroundPaper: BackgroundPaper;
-  //   author
 
-  //   tags: string[];
+  @Column({ type: "int" })
+  likes: number;
+
+  @ManyToMany(type => Tag)
+  tags: Tag[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
 
 export default Post;

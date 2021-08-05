@@ -1,6 +1,4 @@
-import { createConnection } from "typeorm";
-
-import { ConnectionOptions } from "typeorm";
+import { createConnection, ConnectionOptions } from "typeorm";
 
 import { ENV_CONFIG } from "../config/envconfig";
 

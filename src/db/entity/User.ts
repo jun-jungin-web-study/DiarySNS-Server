@@ -3,8 +3,10 @@ import {
   Column,
   Entity,
   PrimaryColumn,
-  CreateDateColumn
+  CreateDateColumn,
+  OneToOne
 } from "typeorm";
+import Image from "./Image";
 
 @Entity()
 class User extends BaseEntity {
@@ -14,17 +16,20 @@ class User extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ type: "varchar", length: 100 })
   password: string;
 
-  @Column({ unique: true })
+  @Column({ type: "varchar", length: 15, unique: true })
   nickname: string;
 
   @Column({ type: "text" })
   description: string;
 
+  @OneToOne(type => Image)
+  profileImage: Image;
+
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt: Date;
 }
 
 export default User;
