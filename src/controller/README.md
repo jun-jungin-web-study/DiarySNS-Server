@@ -6,8 +6,12 @@ HTTP api specification document for **DiarySNS**
 
 - [DiarySNS Api Specifications](#diarysns-api-specifications)
   - [Table of Contents](#table-of-contents)
-  - [API Documentation](#api-documentation)
+  - [Return Data types](#return-data-types)
     - [User](#user)
+    - [Error](#error)
+    - [Status codes](#status-codes)
+  - [API Documentation](#api-documentation)
+    - [User](#user-1)
       - [`POST /api/user/login`](#post-apiuserlogin)
       - [`POST /api/user`](#post-apiuser)
       - [`GET /api/user`](#get-apiuser)
@@ -15,6 +19,46 @@ HTTP api specification document for **DiarySNS**
       - [`Delete /api/user`](#delete-apiuser)
     - [Template](#template)
       - [`GET /?/:?`](#get-)
+
+<a name="return_data_types"></a>
+
+## Return Data types
+
+### User
+
+```
+{
+  "user": {
+    "email": "jungin@kaist.ac.kr",
+    "token": "jwt token",
+    "nickname": "jungin",
+    "description": "I am a student studying CS :)",
+    "profileimage": null
+  }
+}
+```
+
+### Error
+
+Status code should be 442
+
+```
+{
+  "error": {
+    "message": "required field not provided"
+  }
+}
+```
+
+### Status codes
+
+| code | description                                      |
+| ---- | ------------------------------------------------ |
+| 200  | Successful response                              |
+| 442  | error                                            |
+| 401  | Request requires authentication but not provided |
+| 403  | Requests user is not allowed to perfrom          |
+| 404  | not found request                                |
 
 <a name="api_documentation"></a>
 
