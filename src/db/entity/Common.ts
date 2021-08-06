@@ -1,14 +1,14 @@
 import {
   Entity,
-  PrimaryColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  BaseEntity
+  BaseEntity,
+  PrimaryGeneratedColumn
 } from "typeorm";
 
 @Entity()
 export class Common extends BaseEntity {
-  @PrimaryColumn({ unsigned: true })
+  @PrimaryGeneratedColumn({ unsigned: true })
   id: number;
 
   @CreateDateColumn()
