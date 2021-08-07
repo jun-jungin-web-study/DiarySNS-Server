@@ -13,10 +13,11 @@ let db: Connection;
 
 beforeAll(async () => {
   try {
-    await bootstrap().then(application => {
+    db = await dbConnection;
+
+    await bootstrap(db).then(application => {
       app = application;
     });
-    db = await dbConnection;
     server = app.listen(ENV_CONFIG.PORT);
   } catch (e) {
     logger.error(`Test bootstrapping failed: ${e}`);
@@ -24,6 +25,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  await db.dropDatabase();
   server.close();
   await db.close();
 });
@@ -52,42 +54,42 @@ describe("Test User api", () => {
     expect(response.body.user.email).toBe(user.email);
     expect(response.body.user.nickname).toBe(user.nickname);
     expect(response.body.user.description).toBe(null);
-    expect(response.body.user.profileimage).toBe(null);
-    expect(response.statusCode).toBe(200);
+    expect(response.body.user.profileImage).toBe(null);
   });
 
   let token: string;
 
   it("POST /api/user/login", async () => {
     const response = await request(app.app)
-      .post("/api/user")
+      .post("/api/user/login")
       .send({ user: { email: user.email, password: user.password } });
 
-    token = response.body.token;
+    token = response.body.user.token;
 
     expect(response.type).toEqual("application/json");
     expect(response.body.user.email).toBe(user.email);
     expect(response.body.user.nickname).toBe(user.nickname);
     expect(response.body.user.description).toBe(null);
-    expect(response.body.user.profileimage).toBe(null);
+    expect(response.body.user.profileImage).toBe(null);
     expect(response.statusCode).toBe(200);
   });
 
   it("GET /api/user", async () => {
-    //TODO send request with token
     const response = await request(app.app)
       .get("/api/user")
-      .set("Authorization", `Token ${token}`);
+      .set("Authorization", `Bearer ${token}`);
+
+    token = response.body.user.token;
 
     expect(response.type).toEqual("application/json");
     expect(response.body.user.email).toBe(user.email);
     expect(response.body.user.nickname).toBe(user.nickname);
     expect(response.body.user.description).toBe(null);
-    expect(response.body.user.profileimage).toBe(null);
+    expect(response.body.user.profileImage).toBe(null);
     expect(response.statusCode).toBe(200);
   });
 
-  const newUser = {
+  const UserUpdateInfo = {
     nickname: "newnickname",
     password: "newpassword",
     description: "new description"
@@ -96,14 +98,16 @@ describe("Test User api", () => {
   it("PUT /api/user", async () => {
     //TODO send request with token
     const response = await request(app.app)
-      .get("/api/user")
-      .set("Authorization", `Token ${token}`)
-      .send({ user: newUser });
+      .put("/api/user")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ user: UserUpdateInfo });
+
+    token = response.body.user.token;
 
     expect(response.type).toEqual("application/json");
-    expect(response.body.user.email).toBe(newUser.nickname);
-    expect(response.body.user.description).toBe(newUser.description);
-    expect(response.body.user.profileimage).toBe(null);
+    expect(response.body.user.nickname).toBe(UserUpdateInfo.nickname);
+    expect(response.body.user.description).toBe(UserUpdateInfo.description);
+    expect(response.body.user.profileImage).toBe(null);
     expect(response.statusCode).toBe(200);
   });
 
@@ -111,12 +115,12 @@ describe("Test User api", () => {
     //TODO send request with token
     const response = await request(app.app)
       .delete("/api/user")
-      .set("Authorization", `Token ${token}`);
+      .set("Authorization", `Bearer ${token}`);
 
     expect(response.type).toEqual("application/json");
-    expect(response.body.user.email).toBe(newUser.nickname);
-    expect(response.body.user.description).toBe(newUser.description);
-    expect(response.body.user.profileimage).toBe(null);
+    expect(response.body.user.email).toBe(user.email);
+    expect(response.body.user.description).toBe(UserUpdateInfo.description);
+    expect(response.body.user.profileImage).toBe(null);
     expect(response.statusCode).toBe(200);
   });
 
@@ -124,19 +128,17 @@ describe("Test User api", () => {
     const wrongtoken = "wrongwrongwrongwrong";
     const response = await request(app.app)
       .get("/api/user")
-      .set("Authorization", `Token ${wrongtoken}`);
+      .set("Authorization", `Bearer ${wrongtoken}`);
 
     expect(response.statusCode).toBe(401);
   });
 
   it("POST /api/user/login with not existing username and password", async () => {
     const invalidUser = {
-      email: "invalidusername",
+      email: "invalid@email.com",
       password: "invalidpassword"
     };
-    const response = await request(app.app)
-      .get("/api/user")
-      .send({ user: invalidUser });
+    const response = await request(app.app).post("/api/user").send({ user: invalidUser });
 
     expect(response.statusCode).toBe(442);
   });
@@ -147,9 +149,7 @@ describe("Test User api", () => {
       email: "jungin@kaist.ac.kr",
       nickname: "jirhee"
     };
-    const response = await request(app.app)
-      .get("/api/user")
-      .send({ user: invalidRegister });
+    const response = await request(app.app).post("/api/user").send({ user: invalidRegister });
 
     expect(response.statusCode).toBe(442);
   });
