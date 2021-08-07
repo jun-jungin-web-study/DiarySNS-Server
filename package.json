@@ -12,6 +12,7 @@
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.172",
     "@types/passport": "^1.0.7",
+    "@types/passport-jwt": "^3.0.6",
     "jest": "^27.0.6",
     "nodemon": "^2.0.12",
     "supertest": "^6.1.4",
@@ -37,6 +38,7 @@
     "node-gyp": "^8.1.0",
     "passport": "^0.4.1",
     "passport-http-bearer": "^1.0.1",
+    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "typeorm": "^0.2.36",
     "winston": "^3.3.3"
