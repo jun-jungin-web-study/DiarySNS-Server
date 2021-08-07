@@ -1,9 +1,10 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { Server } from "http";
-import { getDefaultSettings } from "http2";
-import { getEnvironmentData } from "worker_threads";
+import passport from "passport";
 import baseController from "./controller/baseController";
 import logger from "./middleware/logger";
+
+import "./service/auth/passport/jwt";
 
 class App {
   public app: express.Application;
@@ -13,6 +14,7 @@ class App {
 
     this.app = app;
     this.registerMiddlewares(middlewares);
+
     this.registerControllers(controllers);
   }
 
@@ -24,9 +26,14 @@ class App {
 
   private registerControllers(controllers: baseController[]): void {
     this.app.get("/", (req, res) => res.status(200).send("Hello"));
-    controllers.forEach(controller =>
-      this.app.use(controller.url, controller.router)
-    );
+
+    controllers.forEach(controller => {
+      this.app.use(controller.url, controller.router);
+    });
+
+    this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      res.status(442).json({ error: { message: err } });
+    });
   }
 
   private registerMiddlewares(middlewares: any[]): void {

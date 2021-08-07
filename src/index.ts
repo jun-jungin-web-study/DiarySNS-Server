@@ -5,36 +5,36 @@ import { ENV_CONFIG } from "./config/envconfig";
 
 import App from "./app";
 
-import LoginService from "./service/LoginService";
-import AuthService from "./service/AuthService";
+import AuthService from "./service/auth/AuthService";
 import PostService from "./service/PostService";
 import CommentService from "./service/CommentService";
 import TagService from "./service/TagService";
 import UserService from "./service/UserService";
 
 import baseController from "./controller/baseController";
-import LoginController from "./controller/Login/LoginController";
 import UserController from "./controller/User/UserController";
 import PostController from "./controller/Post/PostController";
 import CommentController from "./controller/Comment/CommentController";
 import TagController from "./controller/Tag/TagController";
 import dbConnection from "./db/db";
+import passport from "passport";
+import { Connection } from "typeorm";
+import UserRepository from "./db/repository/UserRepository";
 
-export const bootstrap = async () => {
+export const bootstrap = async (connection: Connection) => {
   const middlewares: any[] = [
     express.urlencoded({ extended: true }),
-    express.json()
+    express.json(),
+    passport.initialize()
   ];
 
   const authService = new AuthService();
-  const loginService = new LoginService();
   const postService = new PostService();
   const commentService = new CommentService();
   const tagService = new TagService();
-  const userService = new UserService();
+  const userService = new UserService(connection.getCustomRepository(UserRepository));
 
   const controllers: baseController[] = [
-    new LoginController(loginService, authService),
     new UserController(userService, authService),
     new PostController(postService, authService),
     new CommentController(commentService, authService),
@@ -50,7 +50,7 @@ if (process.env.NODE_ENV !== "test") {
       logger.info(
         `DB: ${ENV_CONFIG.MAINDB_NAME} connected on ${ENV_CONFIG.DB_HOST}:${ENV_CONFIG.DB_PORT}`
       );
-      return bootstrap();
+      return bootstrap(connection);
     })
     .then(app => {
       app.listen(ENV_CONFIG.PORT);

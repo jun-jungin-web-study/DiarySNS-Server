@@ -1,5 +1,5 @@
 import { Router } from "express";
-import AuthService from "../service/AuthService";
+import AuthService from "../service/auth/AuthService";
 
 abstract class baseController {
   // url for routing

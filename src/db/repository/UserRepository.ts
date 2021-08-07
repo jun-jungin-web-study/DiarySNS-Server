@@ -23,11 +23,30 @@ class UserRepository extends AbstractRepository<User> {
     return (await this.repository.count({ where })) > 0;
   }
 
-  async signup(user: User): Promise<User> {
+  async register(email: string, nickname: string, password: string): Promise<User> {
     return this.manager.transaction(async transactionManager => {
-      const registeredUser = await transactionManager.save(user);
+      const newUser = new User();
+      newUser.email = email;
+      newUser.nickname = nickname;
+      newUser.password = password;
+
+      const registeredUser = await transactionManager.save(newUser);
       return registeredUser;
     });
+  }
+
+  async updateUser(user: User, nickname?: string, password?: string, description?: string) {
+    return this.manager.transaction(async transactionManager => {
+      user.nickname = nickname ?? user.nickname;
+      user.password = password ?? user.password;
+      user.description = description ?? user.description;
+
+      return await transactionManager.save(user);
+    });
+  }
+
+  async deleteUser(user: User) {
+    return this.manager.remove(user);
   }
 }
 
