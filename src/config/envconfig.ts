@@ -12,6 +12,6 @@ export const ENV_CONFIG = {
   PORT: Number(process.env.SERVER_PORT),
   env: process.env.NODE_ENV,
   SECRET: process.env.SECRET ?? "secret",
-  REFRESH_TOKEN_EXPIRE: process.env.REFRESH_TOKEN_EXPIRE ?? "1d",
-  ACCESS_TOKEN_EXPIRE: process.env.ACCESS_TOKEN_EXPIRE ?? "4h"
+  REFRESH_TOKEN_EXPIRE: process.env.REFRESH_TOKEN_EXPIRE ?? "30s",
+  ACCESS_TOKEN_EXPIRE: process.env.ACCESS_TOKEN_EXPIRE ?? "60s"
 };
