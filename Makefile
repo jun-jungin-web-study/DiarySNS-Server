@@ -6,3 +6,7 @@ up:
 
 down: 
 	docker-compose down
+
+clean:
+	docker-compose down --volume
+	docker rmi diarysns-server_ts-node-docker

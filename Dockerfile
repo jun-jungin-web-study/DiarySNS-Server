@@ -8,3 +8,4 @@ RUN yarn
 
 COPY . .
 
+ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /
