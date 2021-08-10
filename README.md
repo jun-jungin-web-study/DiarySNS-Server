@@ -46,7 +46,20 @@ We use `Typescript`, `TypeORM`, `mysql`.
 
    (Currently the this repo is under development, so the server executed with `nodemon` in development environment.)
 
+   After this, the api server will run at `localhost:5000`, and mysql database will run at `localhost:3306`.
+
+   To check the server is running well, open send `GET http://localhost:5000/`. If it returns `"hello"`, the server is successfully running on your local machine.
+
 5. You can stop the server by writing below command
    ```
    make down
    ```
+6. You can clean all server related images and volumes with below command
+   ```
+   make clean
+   ```
+7. You can run tests implemented in the server with below command.
+   ```
+   make test
+   ```
+   \*\*\* Currently this works only if there is no images or volumes related to server. This will be fixed.
