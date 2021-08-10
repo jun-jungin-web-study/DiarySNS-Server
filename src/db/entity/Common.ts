@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn
 } from "typeorm";
 
-@Entity()
 export class Common extends BaseEntity {
   @PrimaryGeneratedColumn({ unsigned: true })
   id: number;
