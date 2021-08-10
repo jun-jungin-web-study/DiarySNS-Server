@@ -19,7 +19,7 @@ We use `Typescript`, `TypeORM`, `mysql`.
    docker pull mysql
    ```
 
-3. Configure `.env` file with below format.
+3. Create `.env` file with below format on root directory.
 
    ```
    DB_HOST=typeorm-mysql
