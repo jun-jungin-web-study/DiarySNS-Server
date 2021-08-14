@@ -1,9 +1,14 @@
-import express from "express";
-import logger from "./middleware/logger";
-
 import { ENV_CONFIG } from "./config/envconfig";
 
 import App from "./app";
+
+import logger from "./middleware/logger";
+
+import baseController from "./controller/baseController";
+import UserController from "./controller/User/UserController";
+import PostController from "./controller/Post/PostController";
+import CommentController from "./controller/Comment/CommentController";
+import TagController from "./controller/Tag/TagController";
 
 import AuthService from "./service/auth/AuthService";
 import PostService from "./service/PostService";
@@ -11,21 +16,20 @@ import CommentService from "./service/CommentService";
 import TagService from "./service/TagService";
 import UserService from "./service/UserService";
 
-import baseController from "./controller/baseController";
-import UserController from "./controller/User/UserController";
-import PostController from "./controller/Post/PostController";
-import CommentController from "./controller/Comment/CommentController";
-import TagController from "./controller/Tag/TagController";
 import dbConnection from "./db/db";
+import UserRepository from "./db/repository/UserRepository";
+
 import passport from "passport";
 import { Connection } from "typeorm";
-import UserRepository from "./db/repository/UserRepository";
+import express from "express";
+import cors from "cors";
 
 export const bootstrap = async (connection: Connection) => {
   const middlewares: any[] = [
     express.urlencoded({ extended: true }),
     express.json(),
-    passport.initialize()
+    passport.initialize(),
+    cors()
   ];
 
   const authService = new AuthService();
