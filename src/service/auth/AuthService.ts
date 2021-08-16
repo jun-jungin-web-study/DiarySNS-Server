@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 
 import { ENV_CONFIG } from "../../config/envconfig";
 import User from "../../db/entity/User";
-import logger from "middleware/logger";
+import logger from "../../middleware/logger";
 
 export interface UserPayloadInterface {
   email: string;

@@ -1,7 +1,7 @@
 import UserRepository from "../db/repository/UserRepository";
 import { NextFunction, Request, Response } from "express";
 import User from "../db/entity/User";
-import logger from "middleware/logger";
+import logger from "../middleware/logger";
 
 interface UserLoginRequest {
   email: string;

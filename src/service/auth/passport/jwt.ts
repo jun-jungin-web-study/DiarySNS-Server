@@ -4,7 +4,7 @@ import passport from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { UserPayloadInterface } from "../AuthService";
 import { ENV_CONFIG } from "../../../config/envconfig";
-import logger from "middleware/logger";
+import logger from "../../../middleware/logger";
 
 const secret = ENV_CONFIG.SECRET;
 
