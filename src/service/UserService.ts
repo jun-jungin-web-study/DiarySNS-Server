@@ -67,7 +67,9 @@ class UserService {
         next(`User Login Error: no such user ${email}`);
       }
 
-      if (!user?.comparePassword(password)) {
+      console.log(user);
+
+      if (!(await user?.comparePassword(password))) {
         next(`User Login Error: Incorrect password`);
       }
 
