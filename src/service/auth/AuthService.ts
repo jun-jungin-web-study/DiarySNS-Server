@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 
 import { ENV_CONFIG } from "../../config/envconfig";
 import User from "../../db/entity/User";
+import logger from "middleware/logger";
 
 export interface UserPayloadInterface {
   email: string;
@@ -30,6 +31,8 @@ class AuthService {
 
   public addAccessToken = async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as User;
+
+    logger.info(`Issue Access token - ${user}`);
 
     const payload: UserPayloadInterface = {
       email: user.email,
