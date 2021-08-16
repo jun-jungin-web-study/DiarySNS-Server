@@ -1,6 +1,7 @@
 import UserRepository from "../db/repository/UserRepository";
 import { NextFunction, Request, Response } from "express";
 import User from "../db/entity/User";
+import logger from "middleware/logger";
 
 interface UserLoginRequest {
   email: string;
@@ -30,6 +31,8 @@ class UserService {
     try {
       const { email, nickname, password }: UserRegisterRequest = req.body.user;
 
+      logger.info(`Try to register - email: ${email} nickname: ${nickname} password: ${password}`);
+
       const user = await this.userRepository.findByEmail(email);
 
       if (user) {
@@ -40,7 +43,7 @@ class UserService {
 
       next();
     } catch (e) {
-      next(`User Register Error: ${e}`);
+      next(`User Register Error: ${e.message}`);
     }
   };
 
@@ -48,6 +51,10 @@ class UserService {
     try {
       const user: User = req.user as User;
       const { nickname, password, description }: UserUpdateRequest = req.body.user;
+
+      logger.info(
+        `Try to update - description: ${description} nickname: ${nickname} password: ${password}`
+      );
 
       req.user = await this.userRepository.updateUser(user, nickname, password, description);
 
@@ -60,6 +67,8 @@ class UserService {
   public loginUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password }: UserLoginRequest = req.body.user;
+
+      logger.info(`Try to login - email: ${email} password: ${password}`);
 
       const user = await this.userRepository.findByEmail(email);
 
